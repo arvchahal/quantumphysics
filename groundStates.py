@@ -14,12 +14,12 @@ A = np.array([[alpha1 + alpha, -alpha],
               [-alpha, alpha2 + alpha]])
 
 # Define the s vector (mean position terms) for Φ_i and Φ_j
-r1 = np.array([1.0, 2.0])   #place holders for 2d space to trouble shoot
-r2 = np.array([4.0, 5.0])  
+r1 = np.array([1.0, 2.0,3.0])   #place holders for 2d space to trouble shoot
+r2 = np.array([4.0, 5.0,6.0])  
 r = np.array([[r1],[r2]])
 # Define 2D mean vectors s1 and s2 for each Gaussian
-s1 = np.array([0.5, 0.5]) 
-s2 = np.array([1.5, 1.5])  
+s1 = np.array([0.5, 0.5,.5]) 
+s2 = np.array([1.5, 1.5,.5])  
 #s_arr =[] place holder
 """
 Need to have laser field wavelength to get k1 and k2
@@ -36,7 +36,7 @@ k2 = 2 * np.pi / lambda2
 
 s = np.array([[alpha1*s1+1j*k1],[alpha2*s2+1j*k2]])
 # Define a constant term c if needed for the exponential
-c = 0.0
+c = 1.0
 
 def gaussian_wavefunction(r, s, alpha1, alpha2, alpha, k1, k2):
     r1, r2 = r
@@ -47,7 +47,9 @@ def gaussian_wavefunction(r, s, alpha1, alpha2, alpha, k1, k2):
     imag_part = k1 * r1 + k2 * r2
 
     return np.exp(real_part + 1j * imag_part)
-
+def construct_phi_i(r,s,alpha1,alpha2):
+    pass
+    # return phi_i, phi_i_complex
 def overlap(B, s, s_prime, c, c_prime, d=3):
     v = s+s_prime
     term1 = ((2*np.pi)**2 /( np.linalg.det(B)))**(d/2)
@@ -68,6 +70,7 @@ def kinetic(s,s_prime,d,A,B,O, A_prime):
 
 
 def potential():
+
     pass
 
 def Hamiltonian(s,s_prime,d,A,B,O, A_prime):
@@ -76,6 +79,7 @@ def Hamiltonian(s,s_prime,d,A,B,O, A_prime):
 
 # Define matrix element computation for ⟨Φᵢ | Ĥ | Φⱼ⟩
 def matrixElement_Phi_i_H_Phi_j():
+
     pass
 
 # Example calculation
