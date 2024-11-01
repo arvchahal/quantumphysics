@@ -1,13 +1,14 @@
 import jax.numpy as np
 from jax import grad, vmap
-from jax.scipy.linalg import cho_factor
+from jax.scipy.linalg import cho_factor, h
 
 # Define parameters for the Gaussian function
 alpha1 = 1.0
 alpha2 = 1.0
 alpha = 0.5
+planks = h
 alp_arr = [alpha,alpha1,alpha2]
-dim = 2
+dim = 3
 # Construct the A matrix (2x2 for 2D)
 A = np.array([[alpha1 + alpha, -alpha],
               [-alpha, alpha2 + alpha]])
@@ -51,7 +52,7 @@ def overlap(B, s, s_prime, c, c_prime, d=3):
     v = s+s_prime
     term1 = ((2*np.pi)**2 /( np.linalg.det(B)))**(d/2)
     term2 = np.exp(-0.5 * v.T @ B @ v + c + c_prime)
-    return term1 @ term2
+    return term1 * term2
 
 def construct_A_matrix(dim):
     pass
@@ -59,15 +60,19 @@ def construct_A_matrix(dim):
 def mv_gaussian(A,s,c,r):
     return np.exp(-.5 * (r.T @A@r) + r.T@s + c)
 
-def kinetic(psi_func,r1,r2):
-    pass
-def potential(psi_func,r1,r2):
+def kinetic(s,s_prime,d,A,B,O, A_prime):
+    term1 = planks**2 *.5
+    y = A_prime@np.linalg.inv(B)@s - A @ np.linalg.inv(B) @s_prime
+    term2 = d * np.trace(A@np.linalg.inv(B)@A_prime) -(y.T@y)
+    return term1*term2*O
+
+
+def potential():
     pass
 
-def Hamiltonian(psi_func, r1, r2):
+def Hamiltonian(s,s_prime,d,A,B,O, A_prime):
     # Evaluate the wavefunction
-    psi_val = psi_func(r1, r2, s1, s2)
-    return kinetic(psi_func, r1, r2) + potential(r1, r2, psi_val)
+    return kinetic(s,s_prime,d,A,B,O, A_prime) + potential()
 
 # Define matrix element computation for ⟨Φᵢ | Ĥ | Φⱼ⟩
 def matrixElement_Phi_i_H_Phi_j():
