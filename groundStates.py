@@ -1,7 +1,7 @@
 import jax.numpy as np
 from jax import grad, vmap
 from jax.scipy.linalg import cho_factor, h
-
+from jax import scipy as jsp
 # Define parameters for the Gaussian function
 alpha1 = 1.0
 alpha2 = 1.0
@@ -69,9 +69,25 @@ def kinetic(s,s_prime,d,A,B,O, A_prime):
     return term1*term2*O
 
 
-def potential():
+# Define the potential function V(x)
+def V(x):
 
-    pass
+    return np.exp(-x)  
+
+# Define the main potential function with the integral
+def potential(s, c, a):
+    # Define the integrand function
+    def integrand(x):
+        return V(x) * x * np.exp(-0.5 * a * x**2) * (np.exp(c * s * x) - np.exp(-c * s * x))
+    
+
+    integral_result, _ = jsp.integrate.quad(integrand, 0, np.inf)
+
+
+    prefactor = (1 / s) * np.sqrt(c / (2 * np.pi)) * np.exp(-0.5 * a * s**2)
+    result = prefactor * integral_result
+    
+    return result
 
 def Hamiltonian(s,s_prime,d,A,B,O, A_prime):
     # Evaluate the wavefunction
